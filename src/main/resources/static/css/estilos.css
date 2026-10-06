@@ -1,0 +1,160 @@
+/*
+ * Estilos comunes de la aplicación.
+ * Usad estas variables en las páginas nuevas para mantener un aspecto coherente.
+ */
+:root {
+    --color-fondo: #f4f5f9;
+    --color-superficie: #ffffff;
+    --color-texto: #1c2340;
+    --color-texto-suave: #5a6180;
+    --color-principal: #8c1c2b;      /* rojo butaca */
+    --color-principal-oscuro: #6e1522;
+    --color-realce: #e7b54a;         /* luz de proyector */
+    --color-error: #b3261e;
+    --color-exito: #1e6b3a;
+    --radio: 6px;
+    --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--fuente);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-texto);
+    background: var(--color-fondo);
+}
+
+.contenedor {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+/* Cabecera */
+.cabecera {
+    background: var(--color-texto);
+    color: #fff;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 6px solid var(--color-realce);
+    margin-bottom: 2rem;
+}
+
+.cabecera h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.subtitulo {
+    margin: 0.5rem 0 0;
+    max-width: 38rem;
+    color: #d5d8e6;
+}
+
+/* Paneles de contenido */
+.panel {
+    background: var(--color-superficie);
+    border-radius: var(--radio);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e1e3ec;
+}
+
+.panel h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.ayuda {
+    margin: 0.25rem 0 1.25rem;
+    color: var(--color-texto-suave);
+}
+
+/* Lista de etiquetas (géneros) */
+.etiquetas {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.etiquetas li {
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: #eceef5;
+    font-size: 0.95rem;
+}
+
+.etiquetas li.cargando,
+.etiquetas li.vacio {
+    background: none;
+    padding: 0;
+    color: var(--color-texto-suave);
+}
+
+.etiquetas li.nuevo {
+    background: var(--color-realce);
+}
+
+/* Formularios */
+.formulario label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+input[type="text"] {
+    flex: 1 1 14rem;
+    padding: 0.55rem 0.75rem;
+    font: inherit;
+    border: 1px solid #c4c8d8;
+    border-radius: var(--radio);
+}
+
+button {
+    padding: 0.55rem 1.1rem;
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-principal);
+    border: none;
+    border-radius: var(--radio);
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--color-principal-oscuro);
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--color-realce);
+    outline-offset: 2px;
+}
+
+.mensaje {
+    min-height: 1.5em;
+    margin: 0.5rem 0 0;
+}
+
+.mensaje.error {
+    color: var(--color-error);
+}
+
+.mensaje.exito {
+    color: var(--color-exito);
+}

@@ -1,0 +1,13 @@
+# Compilación
+target/
+
+# Base de datos local (cada miembro del equipo tiene la suya)
+data/
+
+# IDEs y sistema
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

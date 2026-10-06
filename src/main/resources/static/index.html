@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi biblioteca de películas y series</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="cabecera">
+        <div class="contenedor">
+            <h1>Mi biblioteca</h1>
+            <p class="subtitulo">Las películas y series que has visto, las que tienes pendientes y lo que opinas de ellas.</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <section class="panel" aria-labelledby="titulo-generos">
+            <h2 id="titulo-generos">Géneros</h2>
+            <p class="ayuda">Los géneros sirven para clasificar películas y series.</p>
+
+            <ul id="lista-generos" class="etiquetas" aria-live="polite">
+                <li class="cargando">Cargando géneros…</li>
+            </ul>
+
+            <form id="form-genero" class="formulario" novalidate>
+                <label for="nombre-genero">Añadir un género</label>
+                <div class="fila">
+                    <input id="nombre-genero" name="nombre" type="text" maxlength="50"
+                           placeholder="Por ejemplo, Western" autocomplete="off" required>
+                    <button type="submit">Añadir género</button>
+                </div>
+                <p id="mensaje-genero" class="mensaje" role="status"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/generos.js"></script>
+</body>
+</html>
