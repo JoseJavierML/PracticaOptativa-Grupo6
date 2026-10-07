@@ -95,9 +95,14 @@ src/main/java/es/uclm/esiiab/gps/biblioteca/
     ├── GeneroService.java          reglas de negocio
     ├── GeneroController.java       API REST (/api/generos)
     └── DatosInicialesGeneros.java  datos de ejemplo (solo si la tabla está vacía)
+└── titulo/                         catálogo de películas y series
+    ├── Titulo.java                 entidad con tipo película/serie y relación con género
+    ├── TituloController.java       API REST (/api/titulos)
+    ├── TituloService.java          validaciones y operaciones CRUD
+    └── TituloRepository.java       acceso a datos
 src/main/resources/
 ├── application.properties          configuración
-└── static/                         front: index.html, css/, js/
+└── static/                         front: index.html, catalogo.html, css/, js/
 src/test/java/...                   tests
 .github/
 ├── copilot-instructions.md         normas que sigue el agente de Copilot

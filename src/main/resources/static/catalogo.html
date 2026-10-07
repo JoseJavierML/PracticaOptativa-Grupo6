@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catálogo | Mi biblioteca</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="cabecera">
+        <div class="contenedor">
+            <h1>Catálogo</h1>
+            <p class="subtitulo">Gestiona las películas y series disponibles.</p>
+        </div>
+    </header>
+    <main class="contenedor">
+        <section class="panel" aria-labelledby="titulo-catalogo">
+            <div class="cabecera-seccion">
+                <div>
+                    <h2 id="titulo-catalogo">Títulos</h2>
+                    <p class="ayuda">Añade, edita o elimina títulos del catálogo.</p>
+                </div>
+                <button id="nuevo-titulo" type="button">Añadir título</button>
+            </div>
+            <p id="mensaje-catalogo" class="mensaje" role="status"></p>
+            <div id="lista-titulos" class="catalogo" aria-live="polite">
+                <p class="cargando">Cargando catálogo…</p>
+            </div>
+        </section>
+
+        <section id="formulario-seccion" class="panel" hidden aria-labelledby="titulo-formulario">
+            <h2 id="titulo-formulario">Añadir título</h2>
+            <form id="form-titulo" class="formulario" novalidate>
+                <input id="id-titulo" type="hidden">
+                <label for="titulo">Título</label>
+                <input id="titulo" type="text" required maxlength="200">
+                <label for="tipo">Tipo</label>
+                <select id="tipo" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="PELICULA">Película</option>
+                    <option value="SERIE">Serie</option>
+                </select>
+                <label for="anio">Año</label>
+                <input id="anio" type="number" min="1" required>
+                <label for="genero">Género</label>
+                <select id="genero" required><option value="">Selecciona un género</option></select>
+                <label id="etiqueta-duracion" for="duracion">Duración (minutos)</label>
+                <input id="duracion" type="number" min="1">
+                <label id="etiqueta-temporadas" for="temporadas" hidden>Temporadas</label>
+                <input id="temporadas" type="number" min="1" hidden>
+                <div class="fila">
+                    <button type="submit">Guardar</button>
+                    <button id="cancelar-titulo" type="button" class="secundario">Cancelar</button>
+                </div>
+                <p id="mensaje-formulario" class="mensaje" role="alert"></p>
+            </form>
+        </section>
+    </main>
+    <script src="js/catalogo.js"></script>
+</body>
+</html>
