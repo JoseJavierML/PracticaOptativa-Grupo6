@@ -125,6 +125,59 @@ input[type="text"] {
     border-radius: var(--radio);
 }
 
+input[type="number"],
+select {
+    display: block;
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.55rem 0.75rem;
+    margin: 0 0 0.8rem;
+    font: inherit;
+    border: 1px solid #c4c8d8;
+    border-radius: var(--radio);
+}
+
+.cabecera-seccion,
+.tarjeta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cabecera-seccion {
+    justify-content: space-between;
+}
+
+.catalogo {
+    display: grid;
+    gap: 1rem;
+}
+
+.tarjeta {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1rem;
+    border: 1px solid #e1e3ec;
+    border-radius: var(--radio);
+}
+
+.tarjeta h3,
+.tarjeta p {
+    margin: 0;
+}
+
+.tarjeta h3 {
+    flex: 1 1 12rem;
+}
+
+.secundario {
+    background: var(--color-texto-suave);
+}
+
+.peligro {
+    background: var(--color-error);
+}
+
 button {
     padding: 0.55rem 1.1rem;
     font: inherit;
