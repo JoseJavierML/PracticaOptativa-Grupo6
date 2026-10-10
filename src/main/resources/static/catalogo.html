@@ -24,6 +24,27 @@
                 <button id="nuevo-titulo" type="button">Añadir título</button>
             </div>
             <p id="mensaje-catalogo" class="mensaje" role="status"></p>
+            <form id="filtros-catalogo" class="formulario fila" aria-label="Filtrar catálogo">
+                <div>
+                    <label for="filtro-genero">Género</label>
+                    <select id="filtro-genero"><option value="">Todos los géneros</option></select>
+                </div>
+                <div>
+                    <label for="filtro-anio">Año de estreno</label>
+                    <input id="filtro-anio" type="number" min="1" inputmode="numeric">
+                </div>
+                <div>
+                    <label for="filtro-estado">Estado en mi biblioteca</label>
+                    <select id="filtro-estado">
+                        <option value="">Cualquier estado</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="VISTO">Visto</option>
+                        <option value="ABANDONADO">Abandonado</option>
+                    </select>
+                </div>
+                <button type="submit">Buscar</button>
+                <button id="limpiar-filtros" type="button" class="secundario">Limpiar</button>
+            </form>
             <div id="lista-titulos" class="catalogo" aria-live="polite">
                 <p class="cargando">Cargando catálogo…</p>
             </div>
