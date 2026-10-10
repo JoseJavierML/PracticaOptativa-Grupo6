@@ -14,6 +14,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.mock.web.MockHttpSession;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -129,5 +130,63 @@ class TituloControllerTest {
                                 """))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void filtraTitulosPorGeneroYAnio() throws Exception {
+        crearPelicula("Dune", 2021, 5);
+        crearPelicula("Alien", 1979, 7);
+
+        mockMvc.perform(get("/api/titulos").param("generoId", "5").param("anio", "2021"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].titulo").value("Dune"));
+    }
+
+    @Test
+    void filtraTitulosPorEstadoDeLaBibliotecaDelUsuario() throws Exception {
+        MockHttpSession sesion = sesionUsuario(42L);
+        String respuesta = crearPelicula("Dune", 2021, 5);
+        long tituloId = Long.parseLong(respuesta.replaceAll(".*\"id\":(\\d+).*", "$1"));
+        crearPelicula("Alien", 1979, 7);
+
+        mockMvc.perform(post("/api/biblioteca").session(sesion)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"tituloId\":" + tituloId + ",\"estado\":\"VISTO\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/titulos").session(sesion)
+                        .param("generoId", "5")
+                        .param("anio", "2021")
+                        .param("estado", "VISTO"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].titulo").value("Dune"));
+    }
+
+    @Test
+    void devuelveListaVaciaCuandoLosFiltrosNoEncuentranResultados() throws Exception {
+        crearPelicula("Dune", 2021, 5);
+
+        mockMvc.perform(get("/api/titulos").param("generoId", "5").param("anio", "1999"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    private String crearPelicula(String titulo, int anio, int generoId) throws Exception {
+        return mockMvc.perform(post("/api/titulos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"titulo":"%s","anio":%d,"generoId":%d,
+                                 "tipo":"PELICULA","duracion":120}
+                                """.formatted(titulo, anio, generoId)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+    }
+
+    private MockHttpSession sesionUsuario(long usuarioId) {
+        MockHttpSession sesion = new MockHttpSession();
+        sesion.setAttribute("usuarioId", usuarioId);
+        return sesion;
     }
 }

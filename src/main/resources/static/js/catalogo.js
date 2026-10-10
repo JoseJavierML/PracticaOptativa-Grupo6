@@ -16,7 +16,7 @@ function mostrarMensaje(elemento, texto, clase) {
 function pintar(titulos) {
     lista.innerHTML = "";
     if (titulos.length === 0) {
-        lista.innerHTML = "<p class=\"vacio\">Todavía no hay títulos en el catálogo.</p>";
+        lista.innerHTML = "<p class=\"vacio\">No se han encontrado películas ni series con los filtros seleccionados</p>";
         return;
     }
     for (const titulo of titulos) {
@@ -71,13 +71,32 @@ async function cargar(url, opciones) {
     return datos;
 }
 
+function parametrosFiltros() {
+    const parametros = new URLSearchParams();
+    const genero = document.getElementById("filtro-genero").value;
+    const anio = document.getElementById("filtro-anio").value;
+    const estado = document.getElementById("filtro-estado").value;
+    if (genero) parametros.set("generoId", genero);
+    if (anio) parametros.set("anio", anio);
+    if (estado) parametros.set("estado", estado);
+    return parametros;
+}
+
 async function cargarDatos() {
     try {
-        const [titulos, generos] = await Promise.all([cargar(API_TITULOS), cargar(API_GENEROS)]);
+        const [titulos, generos] = await Promise.all([
+            cargar(`${API_TITULOS}?${parametrosFiltros()}`),
+            cargar(API_GENEROS)
+        ]);
         pintar(titulos);
-        const selector = document.getElementById("genero");
-        selector.innerHTML = '<option value="">Selecciona un género</option>';
-        generos.forEach(genero => selector.add(new Option(genero.nombre, genero.id)));
+        const selectorFormulario = document.getElementById("genero");
+        selectorFormulario.innerHTML = '<option value="">Selecciona un género</option>';
+        generos.forEach(genero => selectorFormulario.add(new Option(genero.nombre, genero.id)));
+        const selectorFiltro = document.getElementById("filtro-genero");
+        const valorActual = selectorFiltro.value;
+        selectorFiltro.innerHTML = '<option value="">Todos los géneros</option>';
+        generos.forEach(genero => selectorFiltro.add(new Option(genero.nombre, genero.id)));
+        selectorFiltro.value = valorActual;
     } catch (error) {
         mostrarMensaje(mensaje, error.message, "error");
     }
@@ -122,6 +141,14 @@ async function borrarTitulo(titulo) {
 }
 
 tipo.addEventListener("change", actualizarCampos);
+document.getElementById("filtros-catalogo").addEventListener("submit", evento => {
+    evento.preventDefault();
+    cargarDatos();
+});
+document.getElementById("limpiar-filtros").addEventListener("click", () => {
+    document.getElementById("filtros-catalogo").reset();
+    cargarDatos();
+});
 document.getElementById("nuevo-titulo").addEventListener("click", () => abrirFormulario());
 document.getElementById("cancelar-titulo").addEventListener("click", () => { seccionFormulario.hidden = true; });
 formulario.addEventListener("submit", async evento => {
