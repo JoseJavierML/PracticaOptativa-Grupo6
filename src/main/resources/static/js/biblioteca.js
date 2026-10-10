@@ -6,7 +6,6 @@ const nombresEstado = {
     ABANDONADO: "Abandonado"
 };
 const lista = document.getElementById("lista-biblioteca");
-const formulario = document.getElementById("form-biblioteca");
 const mensaje = document.getElementById("mensaje-biblioteca");
 
 function mostrarMensaje(texto, tipo) {
@@ -105,32 +104,5 @@ async function cargarBiblioteca() {
         mostrarMensaje(error.message, "error");
     }
 }
-
-formulario.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    const tituloId = Number(document.getElementById("id-titulo").value);
-    const titulo = document.getElementById("nombre-titulo").value.trim();
-    if (!Number.isInteger(tituloId) || tituloId <= 0 || titulo === "") {
-        mostrarMensaje("Indica un identificador válido y el título.", "error");
-        return;
-    }
-    const item = {
-        tipoTitulo: document.getElementById("tipo-titulo").value,
-        tituloId,
-        titulo,
-        estado: document.getElementById("estado-inicial").value
-    };
-    try {
-        await solicitar(API_BIBLIOTECA, {
-            method: "POST",
-            body: JSON.stringify(item)
-        });
-        formulario.reset();
-        mostrarMensaje("Título añadido a tu biblioteca.", "exito");
-        await cargarBiblioteca();
-    } catch (error) {
-        mostrarMensaje(error.message, "error");
-    }
-});
 
 cargarBiblioteca();

@@ -72,19 +72,28 @@ Además, GitHub ejecuta los tests automáticamente en cada pull request (pestañ
 
 ## Biblioteca personal
 
+La gestión de cuentas está disponible en `/cuenta.html`. El registro acepta un nombre de
+usuario de 3 a 40 caracteres (`letras`, números, punto, guion o guion bajo) y una contraseña
+de 10 a 128 caracteres. Las contraseñas se almacenan con PBKDF2 y una sal aleatoria.
+
+- `POST /api/usuarios/registro`: crea la cuenta e inicia sesión.
+- `POST /api/usuarios/sesion`: inicia sesión con `nombreUsuario` y `contrasena`.
+- `GET /api/usuarios/sesion`: devuelve la cuenta de la sesión actual.
+- `DELETE /api/usuarios/sesion`: cierra la sesión.
+
 La API `/api/biblioteca` requiere una sesión HTTP con el atributo `usuarioId`, establecido
-por el inicio de sesión. Devuelve `401` si no existe un usuario en la sesión. Los elementos
-guardan una referencia al catálogo (`tipoTitulo`: `PELICULA` o `SERIE`, y `tituloId`), el
-nombre mostrado, el estado (`VISTO`, `PENDIENTE` o `ABANDONADO`) y la fecha de modificación.
+por el inicio de sesión. Devuelve `401` si no existe un usuario en la sesión. Cada elemento
+relaciona al usuario con un título existente del catálogo y guarda el estado (`VISTO`,
+`PENDIENTE` o `ABANDONADO`) y la fecha de modificación.
 
 - `GET /api/biblioteca`: lista solo los títulos del usuario de la sesión.
-- `POST /api/biblioteca`: recibe `tipoTitulo`, `tituloId`, `titulo` y `estado`.
+- `POST /api/biblioteca`: recibe `tituloId` y `estado`; el tipo y nombre se toman del catálogo.
 - `PUT /api/biblioteca/{id}`: recibe el nuevo `estado`.
 - `DELETE /api/biblioteca/{id}`: elimina únicamente la referencia de la biblioteca.
 
-La página de colección está en `/biblioteca.html`. Al integrar el catálogo, sus fichas pueden
-usar el mismo `POST` con el identificador y tipo del título; el inicio de sesión debe guardar
-el identificador del usuario con la clave `usuarioId` en la sesión.
+La página de colección está en `/biblioteca.html`. Desde las fichas de `/catalogo.html` se
+puede añadir el título eligiendo su estado. El inicio de sesión debe guardar el identificador
+del usuario con la clave `usuarioId` en la sesión.
 
 ## Revisar una pull request
 
@@ -116,9 +125,11 @@ src/main/java/es/uclm/esiiab/gps/biblioteca/
     ├── TituloController.java       API REST (/api/titulos)
     ├── TituloService.java          validaciones y operaciones CRUD
     └── TituloRepository.java       acceso a datos
+├── biblioteca/                     colección personal por usuario y título
+└── usuario/                        registro, inicio de sesión y contraseñas PBKDF2
 src/main/resources/
 ├── application.properties          configuración
-└── static/                         front: index.html, catalogo.html, css/, js/
+└── static/                         front: index.html, catalogo.html, biblioteca.html, cuenta.html
 src/test/java/...                   tests
 .github/
 ├── copilot-instructions.md         normas que sigue el agente de Copilot

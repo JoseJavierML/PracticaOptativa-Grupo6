@@ -16,6 +16,12 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import es.uclm.esiiab.gps.biblioteca.genero.Genero;
+import es.uclm.esiiab.gps.biblioteca.genero.GeneroRepository;
+import es.uclm.esiiab.gps.biblioteca.titulo.TipoTitulo;
+import es.uclm.esiiab.gps.biblioteca.titulo.Titulo;
+import es.uclm.esiiab.gps.biblioteca.titulo.TituloRepository;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -23,6 +29,12 @@ class BibliotecaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+        @Autowired
+        private GeneroRepository generoRepository;
+
+        @Autowired
+        private TituloRepository tituloRepository;
 
     @Test
     void rechazaConsultasSinSesionDeUsuario() throws Exception {
@@ -44,20 +56,22 @@ class BibliotecaControllerTest {
     @Test
     void permiteAnadirCambiarConsultarYEliminarSoloLaRelacionPropia() throws Exception {
         MockHttpSession sesionUsuario1 = sesion(1L);
+        Titulo titulo = crearTitulo(TipoTitulo.PELICULA, "La película");
         mockMvc.perform(post("/api/biblioteca")
                         .session(sesionUsuario1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"tipoTitulo":"PELICULA","tituloId":12,
-                                 "titulo":"La película","estado":"PENDIENTE"}
-                                """))
+                        .content("{\"tituloId\":" + titulo.getId()
+                                + ",\"estado\":\"PENDIENTE\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"))
+                .andExpect(jsonPath("$.tituloId").value(titulo.getId()))
+                .andExpect(jsonPath("$.titulo").value("La película"))
+                .andExpect(jsonPath("$.tipoTitulo").value("PELICULA"))
                 .andExpect(jsonPath("$.fechaModificacion").exists());
 
         mockMvc.perform(get("/api/biblioteca").session(sesionUsuario1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].tituloId").value(12));
+                .andExpect(jsonPath("$[0].tituloId").value(titulo.getId()));
         mockMvc.perform(get("/api/biblioteca").session(sesion(2L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
@@ -74,17 +88,19 @@ class BibliotecaControllerTest {
         mockMvc.perform(get("/api/biblioteca").session(sesionUsuario1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
+        mockMvc.perform(get("/api/titulos"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
     }
 
     @Test
     void noPermiteModificarElementosDeOtroUsuario() throws Exception {
+        Titulo titulo = crearTitulo(TipoTitulo.SERIE, "La serie");
         mockMvc.perform(post("/api/biblioteca")
                         .session(sesion(1L))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"tipoTitulo":"SERIE","tituloId":7,
-                                 "titulo":"La serie","estado":"ABANDONADO"}
-                                """))
+                        .content("{\"tituloId\":" + titulo.getId()
+                                + ",\"estado\":\"ABANDONADO\"}"))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(put("/api/biblioteca/1")
@@ -101,10 +117,8 @@ class BibliotecaControllerTest {
     @Test
     void rechazaEstadoNoValidoYDuplicados() throws Exception {
         MockHttpSession sesion = sesion(4L);
-        String contenido = """
-                {"tipoTitulo":"PELICULA","tituloId":21,
-                 "titulo":"Duplicada","estado":"VISTO"}
-                """;
+                Titulo titulo = crearTitulo(TipoTitulo.PELICULA, "Duplicada");
+                String contenido = "{\"tituloId\":" + titulo.getId() + ",\"estado\":\"VISTO\"}";
         mockMvc.perform(post("/api/biblioteca").session(sesion)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(contenido))
@@ -116,8 +130,7 @@ class BibliotecaControllerTest {
         mockMvc.perform(post("/api/biblioteca").session(sesion)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"tipoTitulo":"PELICULA","tituloId":22,
-                                 "titulo":"Sin estado"}
+                                {"tituloId":1}
                                 """))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(post("/api/biblioteca").session(sesion)
@@ -128,11 +141,28 @@ class BibliotecaControllerTest {
         mockMvc.perform(post("/api/biblioteca").session(sesion)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"tipoTitulo":"PELICULA","tituloId":23,
-                                 "titulo":"Estado incorrecto","estado":"EN_CURSO"}
+                                {"tituloId":1,"estado":"EN_CURSO"}
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void rechazaUnIdentificadorQueNoExisteEnElCatalogo() throws Exception {
+        mockMvc.perform(post("/api/biblioteca")
+                        .session(sesion(4L))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"tituloId\":99999,\"estado\":\"PENDIENTE\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").exists());
+    }
+
+    private Titulo crearTitulo(TipoTitulo tipo, String nombre) {
+        Genero genero = generoRepository.findAll().get(0);
+        Titulo titulo = tipo == TipoTitulo.PELICULA
+                ? new Titulo(nombre, 2025, genero, tipo, 120, null)
+                : new Titulo(nombre, 2025, genero, tipo, null, 1);
+        return tituloRepository.save(titulo);
     }
 
     private MockHttpSession sesion(Long usuarioId) {

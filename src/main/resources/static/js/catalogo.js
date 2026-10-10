@@ -1,5 +1,6 @@
 const API_TITULOS = "/api/titulos";
 const API_GENEROS = "/api/generos";
+const API_BIBLIOTECA = "/api/biblioteca";
 const lista = document.getElementById("lista-titulos");
 const seccionFormulario = document.getElementById("formulario-seccion");
 const formulario = document.getElementById("form-titulo");
@@ -34,7 +35,31 @@ function pintar(titulos) {
         borrar.textContent = "Borrar";
         borrar.className = "peligro";
         borrar.addEventListener("click", () => borrarTitulo(titulo));
-        tarjeta.append(editar, borrar);
+
+        const controlesBiblioteca = document.createElement("div");
+        controlesBiblioteca.className = "controles-biblioteca";
+        const estado = document.createElement("select");
+        estado.setAttribute("aria-label", `Estado inicial de ${titulo.titulo}`);
+        for (const [valor, texto] of [["PENDIENTE", "Pendiente"], ["VISTO", "Visto"], ["ABANDONADO", "Abandonado"]]) {
+            estado.add(new Option(texto, valor));
+        }
+        const anadirBiblioteca = document.createElement("button");
+        anadirBiblioteca.type = "button";
+        anadirBiblioteca.textContent = "Añadir a mi biblioteca";
+        anadirBiblioteca.addEventListener("click", async () => {
+            try {
+                await cargar(API_BIBLIOTECA, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tituloId: titulo.id, estado: estado.value })
+                });
+                mostrarMensaje(mensaje, `Se añadió "${titulo.titulo}" a tu biblioteca.`, "exito");
+            } catch (error) {
+                mostrarMensaje(mensaje, error.message, "error");
+            }
+        });
+        controlesBiblioteca.append(estado, anadirBiblioteca);
+        tarjeta.append(editar, borrar, controlesBiblioteca);
         lista.appendChild(tarjeta);
     }
 }

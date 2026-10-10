@@ -9,7 +9,7 @@
 <body>
     <header class="cabecera">
         <div class="contenedor">
-            <nav class="navegacion"><a href="index.html">Inicio</a></nav>
+            <nav class="navegacion"><a href="index.html">Inicio</a> · <a href="catalogo.html">Catálogo</a> · <a href="cuenta.html">Mi cuenta</a></nav>
             <h1>Mi colección</h1>
             <p class="subtitulo">Tus películas y series, organizadas por estado.</p>
         </div>
@@ -24,32 +24,10 @@
             </ul>
         </section>
 
-        <section class="panel" aria-labelledby="titulo-anadir">
-            <h2 id="titulo-anadir">Añadir a mi biblioteca</h2>
-            <form id="form-biblioteca" class="formulario" novalidate>
-                <div class="campos-biblioteca">
-                    <label for="tipo-titulo">Tipo de título
-                        <select id="tipo-titulo" required>
-                            <option value="PELICULA">Película</option>
-                            <option value="SERIE">Serie</option>
-                        </select>
-                    </label>
-                    <label for="id-titulo">Identificador del catálogo
-                        <input id="id-titulo" type="number" min="1" step="1" required>
-                    </label>
-                    <label for="nombre-titulo">Título
-                        <input id="nombre-titulo" type="text" maxlength="200" required>
-                    </label>
-                    <label for="estado-inicial">Estado
-                        <select id="estado-inicial" required>
-                            <option value="PENDIENTE">Pendiente</option>
-                            <option value="VISTO">Visto</option>
-                            <option value="ABANDONADO">Abandonado</option>
-                        </select>
-                    </label>
-                </div>
-                <button type="submit">Añadir título</button>
-            </form>
+        <section class="panel" aria-labelledby="titulo-catalogo">
+            <h2 id="titulo-catalogo">Añadir desde el catálogo</h2>
+            <p class="ayuda">Elige el estado de una película o serie desde su ficha en el catálogo.</p>
+            <a class="boton-enlace" href="catalogo.html">Ir al catálogo</a>
         </section>
     </main>
 

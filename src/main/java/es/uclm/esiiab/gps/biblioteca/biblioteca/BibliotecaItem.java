@@ -6,18 +6,25 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import es.uclm.esiiab.gps.biblioteca.titulo.Titulo;
+import es.uclm.esiiab.gps.biblioteca.titulo.TipoTitulo;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
         name = "uk_biblioteca_usuario_titulo",
-        columnNames = {"usuario_id", "tipo_titulo", "titulo_id"}))
+    columnNames = {"usuario_id", "titulo_id"}))
 public class BibliotecaItem {
 
     @Id
@@ -27,15 +34,19 @@ public class BibliotecaItem {
     @Column(name = "usuario_id", nullable = false)
     private Long usuarioId;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "titulo_id", nullable = false)
+    private Titulo titulo;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_titulo", nullable = false, length = 20)
     private TipoTitulo tipoTitulo;
 
-    @Column(name = "titulo_id", nullable = false)
-    private Long tituloId;
+    @Column(name = "titulo", nullable = false, length = 200)
+    private String nombreTitulo;
 
-    @Column(nullable = false, length = 200)
-    private String titulo;
+    @Column(name = "nombre_titulo", nullable = false, length = 200)
+    private String nombreTituloMigracion;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -47,12 +58,12 @@ public class BibliotecaItem {
     protected BibliotecaItem() {
     }
 
-    public BibliotecaItem(Long usuarioId, TipoTitulo tipoTitulo, Long tituloId,
-            String titulo, EstadoBiblioteca estado) {
+    public BibliotecaItem(Long usuarioId, Titulo titulo, EstadoBiblioteca estado) {
         this.usuarioId = usuarioId;
-        this.tipoTitulo = tipoTitulo;
-        this.tituloId = tituloId;
         this.titulo = titulo;
+        this.tipoTitulo = titulo.getTipo();
+        this.nombreTitulo = titulo.getTitulo();
+        this.nombreTituloMigracion = titulo.getTitulo();
         this.estado = estado;
     }
 
@@ -70,15 +81,7 @@ public class BibliotecaItem {
         return usuarioId;
     }
 
-    public TipoTitulo getTipoTitulo() {
-        return tipoTitulo;
-    }
-
-    public Long getTituloId() {
-        return tituloId;
-    }
-
-    public String getTitulo() {
+    public Titulo getTitulo() {
         return titulo;
     }
 

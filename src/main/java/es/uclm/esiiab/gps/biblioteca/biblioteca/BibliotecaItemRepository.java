@@ -11,6 +11,5 @@ public interface BibliotecaItemRepository extends JpaRepository<BibliotecaItem, 
 
     Optional<BibliotecaItem> findByIdAndUsuarioId(Long id, Long usuarioId);
 
-    boolean existsByUsuarioIdAndTipoTituloAndTituloId(
-            Long usuarioId, TipoTitulo tipoTitulo, Long tituloId);
+    boolean existsByUsuarioIdAndTitulo_Id(Long usuarioId, Long tituloId);
 }

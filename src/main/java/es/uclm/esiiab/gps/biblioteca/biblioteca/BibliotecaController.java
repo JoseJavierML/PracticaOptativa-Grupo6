@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
+import es.uclm.esiiab.gps.biblioteca.titulo.TituloNoEncontradoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +36,7 @@ public class BibliotecaController {
         if (usuarioId == null) {
             return noAutorizado();
         }
-        List<BibliotecaItem> items = servicio.listar(usuarioId);
+        List<BibliotecaService.ElementoBiblioteca> items = servicio.listar(usuarioId);
         return ResponseEntity.ok(items);
     }
 
@@ -46,7 +47,7 @@ public class BibliotecaController {
         if (usuarioId == null) {
             return noAutorizado();
         }
-        BibliotecaItem creado = servicio.anadir(usuarioId, peticion);
+        BibliotecaService.ElementoBiblioteca creado = servicio.anadir(usuarioId, peticion);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
@@ -77,6 +78,11 @@ public class BibliotecaController {
 
     @ExceptionHandler(BibliotecaItemNoEncontradoException.class)
     public ResponseEntity<Map<String, String>> noEncontrado(BibliotecaItemNoEncontradoException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler(TituloNoEncontradoException.class)
+    public ResponseEntity<Map<String, String>> tituloNoEncontrado(TituloNoEncontradoException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
     }
 
