@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi cuenta | Mi biblioteca</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="cabecera">
+        <div class="contenedor">
+            <nav class="navegacion"><a href="index.html">Inicio</a> · <a href="catalogo.html">Catálogo</a> · <a href="biblioteca.html">Mi colección</a></nav>
+            <h1>Mi cuenta</h1>
+            <p class="subtitulo">Accede a tu colección personal.</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <p id="estado-sesion" class="mensaje" role="status" aria-live="polite">Comprobando sesión...</p>
+        <div id="zona-cuenta" class="rejilla-cuenta">
+            <section class="panel" aria-labelledby="titulo-acceso">
+                <h2 id="titulo-acceso">Iniciar sesión</h2>
+                <form id="form-acceso" class="formulario" novalidate>
+                    <label for="usuario-acceso">Nombre de usuario</label>
+                    <input id="usuario-acceso" type="text" minlength="3" maxlength="40" autocomplete="username" required>
+                    <label for="contrasena-acceso">Contraseña</label>
+                    <input id="contrasena-acceso" type="password" minlength="10" maxlength="128" autocomplete="current-password" required>
+                    <button type="submit">Entrar</button>
+                    <p id="mensaje-acceso" class="mensaje" role="alert"></p>
+                </form>
+            </section>
+
+            <section class="panel" aria-labelledby="titulo-registro">
+                <h2 id="titulo-registro">Crear cuenta</h2>
+                <form id="form-registro" class="formulario" novalidate>
+                    <label for="usuario-registro">Nombre de usuario</label>
+                    <input id="usuario-registro" type="text" minlength="3" maxlength="40" autocomplete="username" required>
+                    <label for="contrasena-registro">Contraseña</label>
+                    <input id="contrasena-registro" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+                    <button type="submit">Registrarme</button>
+                    <p id="mensaje-registro" class="mensaje" role="alert"></p>
+                </form>
+            </section>
+        </div>
+        <div id="acciones-sesion" hidden>
+            <a class="boton-enlace" href="biblioteca.html">Ver mi colección</a>
+            <button id="cerrar-sesion" class="boton-secundario" type="button">Cerrar sesión</button>
+        </div>
+    </main>
+
+    <script src="js/cuenta.js"></script>
+</body>
+</html>

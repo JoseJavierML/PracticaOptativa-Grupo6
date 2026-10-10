@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi colección | Mi biblioteca</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="cabecera">
+        <div class="contenedor">
+            <nav class="navegacion"><a href="index.html">Inicio</a> · <a href="catalogo.html">Catálogo</a> · <a href="cuenta.html">Mi cuenta</a></nav>
+            <h1>Mi colección</h1>
+            <p class="subtitulo">Tus películas y series, organizadas por estado.</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <section class="panel" aria-labelledby="titulo-coleccion">
+            <h2 id="titulo-coleccion">Títulos guardados</h2>
+            <p id="mensaje-biblioteca" class="mensaje" role="status" aria-live="polite"></p>
+            <ul id="lista-biblioteca" class="coleccion" aria-live="polite">
+                <li class="cargando">Cargando tu colección...</li>
+            </ul>
+        </section>
+
+        <section class="panel" aria-labelledby="titulo-catalogo">
+            <h2 id="titulo-catalogo">Añadir desde el catálogo</h2>
+            <p class="ayuda">Elige el estado de una película o serie desde su ficha en el catálogo.</p>
+            <a class="boton-enlace" href="catalogo.html">Ir al catálogo</a>
+        </section>
+    </main>
+
+    <script src="js/biblioteca.js"></script>
+</body>
+</html>
