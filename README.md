@@ -70,6 +70,22 @@ en el modelo de datos (por ejemplo, un campo nuevo obligatorio en una tabla que 
 Los tests usan una base de datos en memoria, así que no tocan vuestros datos de `data/`.
 Además, GitHub ejecuta los tests automáticamente en cada pull request (pestaña *Checks*).
 
+## Biblioteca personal
+
+La API `/api/biblioteca` requiere una sesión HTTP con el atributo `usuarioId`, establecido
+por el inicio de sesión. Devuelve `401` si no existe un usuario en la sesión. Los elementos
+guardan una referencia al catálogo (`tipoTitulo`: `PELICULA` o `SERIE`, y `tituloId`), el
+nombre mostrado, el estado (`VISTO`, `PENDIENTE` o `ABANDONADO`) y la fecha de modificación.
+
+- `GET /api/biblioteca`: lista solo los títulos del usuario de la sesión.
+- `POST /api/biblioteca`: recibe `tipoTitulo`, `tituloId`, `titulo` y `estado`.
+- `PUT /api/biblioteca/{id}`: recibe el nuevo `estado`.
+- `DELETE /api/biblioteca/{id}`: elimina únicamente la referencia de la biblioteca.
+
+La página de colección está en `/biblioteca.html`. Al integrar el catálogo, sus fichas pueden
+usar el mismo `POST` con el identificador y tipo del título; el inicio de sesión debe guardar
+el identificador del usuario con la clave `usuarioId` en la sesión.
+
 ## Revisar una pull request
 
 1. Parad la aplicación si está arrancada.

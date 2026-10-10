@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi colección | Mi biblioteca</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="cabecera">
+        <div class="contenedor">
+            <nav class="navegacion"><a href="index.html">Inicio</a></nav>
+            <h1>Mi colección</h1>
+            <p class="subtitulo">Tus películas y series, organizadas por estado.</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <section class="panel" aria-labelledby="titulo-coleccion">
+            <h2 id="titulo-coleccion">Títulos guardados</h2>
+            <p id="mensaje-biblioteca" class="mensaje" role="status" aria-live="polite"></p>
+            <ul id="lista-biblioteca" class="coleccion" aria-live="polite">
+                <li class="cargando">Cargando tu colección...</li>
+            </ul>
+        </section>
+
+        <section class="panel" aria-labelledby="titulo-anadir">
+            <h2 id="titulo-anadir">Añadir a mi biblioteca</h2>
+            <form id="form-biblioteca" class="formulario" novalidate>
+                <div class="campos-biblioteca">
+                    <label for="tipo-titulo">Tipo de título
+                        <select id="tipo-titulo" required>
+                            <option value="PELICULA">Película</option>
+                            <option value="SERIE">Serie</option>
+                        </select>
+                    </label>
+                    <label for="id-titulo">Identificador del catálogo
+                        <input id="id-titulo" type="number" min="1" step="1" required>
+                    </label>
+                    <label for="nombre-titulo">Título
+                        <input id="nombre-titulo" type="text" maxlength="200" required>
+                    </label>
+                    <label for="estado-inicial">Estado
+                        <select id="estado-inicial" required>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="VISTO">Visto</option>
+                            <option value="ABANDONADO">Abandonado</option>
+                        </select>
+                    </label>
+                </div>
+                <button type="submit">Añadir título</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/biblioteca.js"></script>
+</body>
+</html>

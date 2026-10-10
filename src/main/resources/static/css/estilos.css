@@ -57,6 +57,15 @@ body {
     color: #d5d8e6;
 }
 
+.navegacion {
+    margin-top: 1rem;
+}
+
+.navegacion a {
+    color: #fff;
+    font-weight: 600;
+}
+
 /* Paneles de contenido */
 .panel {
     background: var(--color-superficie);
@@ -117,12 +126,15 @@ body {
     gap: 0.5rem;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"],
+select {
     flex: 1 1 14rem;
     padding: 0.55rem 0.75rem;
     font: inherit;
     border: 1px solid #c4c8d8;
     border-radius: var(--radio);
+    background: var(--color-superficie);
 }
 
 input[type="number"],
@@ -194,6 +206,7 @@ button:hover {
 }
 
 input:focus-visible,
+select:focus-visible,
 button:focus-visible {
     outline: 3px solid var(--color-realce);
     outline-offset: 2px;
@@ -210,4 +223,84 @@ button:focus-visible {
 
 .mensaje.exito {
     color: var(--color-exito);
+}
+
+.campos-biblioteca {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.campos-biblioteca label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.campos-biblioteca input,
+.campos-biblioteca select {
+    width: 100%;
+    min-width: 0;
+}
+
+.coleccion {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+}
+
+.coleccion .vacio,
+.coleccion .cargando {
+    color: var(--color-texto-suave);
+}
+
+.elemento-coleccion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid #e1e3ec;
+}
+
+.informacion-titulo {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.informacion-titulo span {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+}
+
+.acciones-coleccion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.acciones-coleccion select {
+    flex: 0 1 auto;
+}
+
+.boton-secundario {
+    color: var(--color-texto);
+    background: #eceef5;
+}
+
+.boton-secundario:hover {
+    background: #dfe2ec;
+}
+
+@media (max-width: 38rem) {
+    .acciones-coleccion {
+        width: 100%;
+    }
+
+    .acciones-coleccion select {
+        flex: 1 1 100%;
+    }
 }
