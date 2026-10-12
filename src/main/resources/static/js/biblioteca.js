@@ -83,6 +83,12 @@ function crearFila(item) {
 
     acciones.append(selector, actualizar, eliminar);
     fila.append(informacion, acciones);
+    if (item.tipoTitulo === "SERIE") {
+        const progreso = window.crearProgresoSerie(item.tituloId,
+            error => mostrarMensaje(error.message, "error"));
+        fila.appendChild(progreso.element);
+        progreso.cargar();
+    }
     return fila;
 }
 

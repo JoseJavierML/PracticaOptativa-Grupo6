@@ -300,6 +300,41 @@ button:focus-visible {
     font-size: 0.9rem;
 }
 
+.progreso-serie {
+    flex: 1 0 100%;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e1e3ec;
+}
+
+.progreso-serie summary,
+.temporada-progreso summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.temporada-progreso {
+    margin-top: 0.75rem;
+}
+
+.lista-capitulos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 0.35rem 1rem;
+    padding: 0.5rem 0 0.25rem;
+}
+
+.capitulo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+.capitulo-checkbox input {
+    accent-color: var(--color-exito);
+}
+
 .acciones-coleccion {
     display: flex;
     flex-wrap: wrap;

@@ -24,7 +24,7 @@ function pintar(titulos) {
         tarjeta.className = "tarjeta";
         const detalle = titulo.tipo === "PELICULA"
             ? `${titulo.duracion} minutos`
-            : `${titulo.temporadas} temporadas`;
+            : `${titulo.temporadas} temporadas · ${titulo.capitulos} capítulos`;
         tarjeta.innerHTML = `<h3></h3><p>${titulo.tipo === "PELICULA" ? "Película" : "Serie"} · ${titulo.anio} · ${detalle}</p><p>Género: <span></span></p>`;
         tarjeta.querySelector("h3").textContent = titulo.titulo;
         tarjeta.querySelector("span").textContent = titulo.genero.nombre;
@@ -38,6 +38,12 @@ function pintar(titulos) {
 
         const controlesBiblioteca = document.createElement("div");
         controlesBiblioteca.className = "controles-biblioteca";
+        const progresoSerie = titulo.tipo === "SERIE"
+            ? window.crearProgresoSerie(titulo.id, error => mostrarMensaje(mensaje, error.message, "error"))
+            : null;
+        if (progresoSerie) {
+            progresoSerie.element.hidden = true;
+        }
         const estado = document.createElement("select");
         estado.setAttribute("aria-label", `Estado inicial de ${titulo.titulo}`);
         for (const [valor, texto] of [["PENDIENTE", "Pendiente"], ["VISTO", "Visto"], ["ABANDONADO", "Abandonado"]]) {
@@ -54,12 +60,21 @@ function pintar(titulos) {
                     body: JSON.stringify({ tituloId: titulo.id, estado: estado.value })
                 });
                 mostrarMensaje(mensaje, `Se añadió "${titulo.titulo}" a tu biblioteca.`, "exito");
+                if (progresoSerie) {
+                    progresoSerie.element.hidden = false;
+                    await progresoSerie.cargar();
+                }
             } catch (error) {
                 mostrarMensaje(mensaje, error.message, "error");
+                if (progresoSerie && error.message === "Ese título ya está en tu biblioteca.") {
+                    progresoSerie.element.hidden = false;
+                    await progresoSerie.cargar();
+                }
             }
         });
         controlesBiblioteca.append(estado, anadirBiblioteca);
         tarjeta.append(editar, borrar, controlesBiblioteca);
+        if (progresoSerie) tarjeta.appendChild(progresoSerie.element);
         lista.appendChild(tarjeta);
     }
 }
@@ -113,6 +128,8 @@ function abrirFormulario(titulo) {
         document.getElementById("genero").value = titulo.genero.id;
         document.getElementById("duracion").value = titulo.duracion || "";
         document.getElementById("temporadas").value = titulo.temporadas || "";
+        document.getElementById("capitulos-por-temporada").value =
+            titulo.capitulosPorTemporada?.join(", ") || "";
     }
     actualizarCampos();
     seccionFormulario.hidden = false;
@@ -125,8 +142,11 @@ function actualizarCampos() {
     document.getElementById("etiqueta-duracion").hidden = !pelicula;
     document.getElementById("temporadas").hidden = pelicula || tipo.value === "";
     document.getElementById("etiqueta-temporadas").hidden = pelicula || tipo.value === "";
+    document.getElementById("capitulos-por-temporada").hidden = pelicula || tipo.value === "";
+    document.getElementById("etiqueta-capitulos-temporada").hidden = pelicula || tipo.value === "";
     document.getElementById("duracion").required = pelicula;
     document.getElementById("temporadas").required = !pelicula && tipo.value !== "";
+    document.getElementById("capitulos-por-temporada").required = !pelicula && tipo.value !== "";
 }
 
 async function borrarTitulo(titulo) {
@@ -159,7 +179,11 @@ formulario.addEventListener("submit", async evento => {
         anio: Number(document.getElementById("anio").value),
         generoId: Number(document.getElementById("genero").value),
         duracion: tipo.value === "PELICULA" ? Number(document.getElementById("duracion").value) : null,
-        temporadas: tipo.value === "SERIE" ? Number(document.getElementById("temporadas").value) : null
+        temporadas: tipo.value === "SERIE" ? Number(document.getElementById("temporadas").value) : null,
+        capitulosPorTemporada: tipo.value === "SERIE"
+            ? document.getElementById("capitulos-por-temporada").value
+                .split(",").map(valor => Number(valor.trim()))
+            : null
     };
     try {
         const id = document.getElementById("id-titulo").value;
