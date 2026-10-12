@@ -1,113 +1,83 @@
 # Mi biblioteca de películas y series
 
-Plantilla de la práctica de **Gestión de Proyectos Software** (ESIIAB, UCLM).
+Plantilla de la práctica de Gestión de Proyectos Software (ESIIAB, UCLM).
 
-La aplicación ya arranca y tiene una funcionalidad de ejemplo completa (géneros) que recorre
-todas las capas: base de datos, API REST y página web. El resto lo construiréis a partir del
-backlog del proyecto, con el agente de Copilot como equipo de desarrollo.
+## Integrantes del Grupo 6
+- **María Martínez González**
+- **Elena Organero Maroto**
+- **José Javier Maestro López**
+
+---
+
+La aplicación ya arranca y tiene una funcionalidad de ejemplo completa (géneros) que recorre todas las capas: base de datos, API REST y página web. El resto se ha construido a partir del backlog del proyecto, con el agente de Copilot como equipo de desarrollo.
 
 ## Requisitos
+- JDK 21 o superior (por ejemplo, Eclipse Temurin). Comprobadlo con `java -version`.
+- Git.
+- Visual Studio Code. Al abrir el proyecto os sugerirá las extensiones recomendadas (Java, Spring Boot, GitHub Copilot y GitHub Pull Requests): instaladlas.
 
-- **JDK 21 o superior** (por ejemplo, [Eclipse Temurin](https://adoptium.net/)). Comprobadlo con `java -version`.
-- **Git**.
-- **Visual Studio Code**. Al abrir el proyecto os sugerirá las extensiones recomendadas
-  (Java, Spring Boot, GitHub Copilot y GitHub Pull Requests): instaladlas.
+No hace falta instalar Maven ni ninguna base de datos: el proyecto incluye el Maven wrapper (`mvnw`) y usa H2, una base de datos que se guarda en un fichero dentro del propio proyecto.
 
-No hace falta instalar Maven ni ninguna base de datos: el proyecto incluye el *Maven wrapper*
-(`mvnw`) y usa H2, una base de datos que se guarda en un fichero dentro del propio proyecto.
-
-> **¿Qué es `mvnw`?** Maven es la herramienta que compila el proyecto, descarga las librerías
-> indicadas en `pom.xml`, ejecuta los tests y arranca la aplicación. `mvnw` es un pequeño script
-> que descarga automáticamente la versión de Maven que necesita el proyecto la primera vez que
-> se ejecuta, así que no tenéis que instalarlo. `mvnw.cmd` es la versión para Windows y `mvnw`
-> la de Linux/macOS. Lo que va detrás es la orden para Maven: `test`, `spring-boot:run`...
+### ¿Qué es mvnw?
+Maven es la herramienta que compila el proyecto, descarga las librerías indicadas en `pom.xml`, ejecuta los tests y arranca la aplicación. `mvnw` es un pequeño script que descarga automáticamente la versión de Maven que necesita el proyecto la primera vez que se ejecuta, así que no tenéis que instalarlo. `mvnw.cmd` es la versión para Windows y `mvnw` la de Linux/macOS. Lo que va detrás es la orden para Maven: `test`, `spring-boot:run`...
 
 ## Arrancar la aplicación
-
-Desde la carpeta del proyecto (por ejemplo, en el terminal integrado de VS Code:
-*Terminal → Nuevo terminal*):
+Desde la carpeta del proyecto (por ejemplo, en el terminal integrado de VS Code: *Terminal* → *Nuevo terminal*):
 
 | Sistema | Comando |
-|---|---|
-| Windows | `.\mvnw.cmd spring-boot:run` |
-| Linux / macOS | `./mvnw spring-boot:run` |
+| :--- | :--- |
+| **Windows** | `.\mvnw.cmd spring-boot:run` |
+| **Linux / macOS** | `./mvnw spring-boot:run` |
 
-> **Windows:** el terminal de VS Code es PowerShell, que exige el `.\` delante para ejecutar
-> un programa de la carpeta actual. En el símbolo del sistema clásico (`cmd`) funciona también
-> sin él.
+*Windows:* El terminal de VS Code es PowerShell, que exige el `.\` delante para ejecutar un programa de la carpeta actual. En el símbolo del sistema clásico (`cmd`) funciona también sin él.
 
-La primera vez tarda unos minutos porque descarga Maven y las dependencias.
-Cuando en la consola aparezca `Started BibliotecaApplication`, abrid:
-
-- **Aplicación:** <http://localhost:8080>
-- **Consola de la base de datos:** <http://localhost:8080/h2-console>
-  (JDBC URL: `jdbc:h2:file:./data/biblioteca`, usuario `sa`, sin contraseña)
+La primera vez tarda unos minutos porque descarga Maven y las dependencias. Cuando en la consola aparezca `Started BibliotecaApplication`, abrid:
+- **Aplicación:** [http://localhost:8080](http://localhost:8080)
+- **Consola de la base de datos:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:file:./data/biblioteca`, usuario `sa`, sin contraseña)
 
 Para parar la aplicación: `Ctrl + C` en la consola.
 
-> En Linux/macOS, si aparece "Permission denied", ejecutad una vez `chmod +x mvnw`.
+*En Linux/macOS, si aparece "Permission denied", ejecutad una vez `chmod +x mvnw`.*
 
-## Los datos se conservan
-
-Lo que añadáis se guarda en la carpeta `data/` y sigue ahí al volver a arrancar.
-Esa carpeta no se sube a GitHub: cada miembro del equipo tiene sus propios datos locales.
+### Los datos se conservan
+Lo que añadáis se guarda en la carpeta `data/` y sigue ahí al volver a arrancar. Esa carpeta no se sube a GitHub: cada miembro del equipo tiene sus propios datos locales.
 
 ### Empezar con la base de datos limpia
-
-Parad la aplicación y borrad la carpeta `data/`. Al volver a arrancar se crea vacía
-y se cargan los datos de ejemplo.
-
-Hacedlo, sobre todo, si al probar una rama la aplicación falla al arrancar por un cambio
-en el modelo de datos (por ejemplo, un campo nuevo obligatorio en una tabla que ya tenía filas).
+Parad la aplicación y borrad la carpeta `data/`. Al volver a arrancar se crea vacía y se cargan los datos de ejemplo.
+Hacedlo, sobre todo, si al probar una rama la aplicación falla al arrancar por un cambio en el modelo de datos (por ejemplo, un campo nuevo obligatorio en una tabla que ya tenía filas).
 
 ## Ejecutar los tests
 
 | Sistema | Comando |
-|---|---|
-| Windows | `.\mvnw.cmd test` |
-| Linux / macOS | `./mvnw test` |
+| :--- | :--- |
+| **Windows** | `.\mvnw.cmd test` |
+| **Linux / macOS** | `./mvnw test` |
 
-Los tests usan una base de datos en memoria, así que no tocan vuestros datos de `data/`.
-Además, GitHub ejecuta los tests automáticamente en cada pull request (pestaña *Checks*).
+Los tests usan una base de datos en memoria, así que no tocan vuestros datos de `data/`. Además, GitHub ejecuta los tests automáticamente en cada pull request (pestaña *Checks*).
 
 ## Biblioteca personal
-
-La gestión de cuentas está disponible en `/cuenta.html`. El registro acepta un nombre de
-usuario de 3 a 40 caracteres (`letras`, números, punto, guion o guion bajo) y una contraseña
-de 10 a 128 caracteres. Las contraseñas se almacenan con PBKDF2 y una sal aleatoria.
+La gestión de cuentas está disponible en `/cuenta.html`. El registro acepta un nombre de usuario de 3 a 40 caracteres (letras, números, punto, guion o guion bajo) y una contraseña de 10 a 128 caracteres. Las contraseñas se almacenan con PBKDF2 y una sal aleatoria.
 
 - `POST /api/usuarios/registro`: crea la cuenta e inicia sesión.
 - `POST /api/usuarios/sesion`: inicia sesión con `nombreUsuario` y `contrasena`.
 - `GET /api/usuarios/sesion`: devuelve la cuenta de la sesión actual.
 - `DELETE /api/usuarios/sesion`: cierra la sesión.
 
-La API `/api/biblioteca` requiere una sesión HTTP con el atributo `usuarioId`, establecido
-por el inicio de sesión. Devuelve `401` si no existe un usuario en la sesión. Cada elemento
-relaciona al usuario con un título existente del catálogo y guarda el estado (`VISTO`,
-`PENDIENTE` o `ABANDONADO`) y la fecha de modificación.
+La API `/api/biblioteca` requiere una sesión HTTP con el atributo `usuarioId`, establecido por el inicio de sesión. Devuelve 401 si no existe un usuario en la sesión. Cada elemento relaciona al usuario con un título existente del catálogo y guarda el estado (`VISTO`, `PENDIENTE` o `ABANDONADO`) y la fecha de modificación.
 
 - `GET /api/biblioteca`: lista solo los títulos del usuario de la sesión.
 - `POST /api/biblioteca`: recibe `tituloId` y `estado`; el tipo y nombre se toman del catálogo.
-- `PUT /api/biblioteca/{id}`: recibe el nuevo `estado`.
+- `PUT /api/biblioteca/{id}`: recibe el nuevo estado.
 - `DELETE /api/biblioteca/{id}`: elimina únicamente la referencia de la biblioteca.
 
-La página de colección está en `/biblioteca.html`. Desde las fichas de `/catalogo.html` se
-puede añadir el título eligiendo su estado. El inicio de sesión debe guardar el identificador
-del usuario con la clave `usuarioId` en la sesión.
+La página de colección está en `/biblioteca.html`. Desde las fichas de `/catalogo.html` se puede añadir el título eligiendo su estado. El inicio de sesión debe guardar el identificador del usuario con la clave `usuarioId` en la sesión.
 
-## Revisar una pull request
-
+## Revisar una Pull Request
 1. Parad la aplicación si está arrancada.
 2. Traed los cambios y cambiad a la rama de la PR:
-   ```
+   ```bash
    git fetch
    git switch nombre-de-la-rama
-   ```
-   (También podéis hacerlo desde VS Code con la extensión GitHub Pull Requests.)
-3. Si la PR indica que cambia el modelo de datos, borrad la carpeta `data/`.
-4. Arrancad la aplicación y comprobad **uno a uno los criterios de aceptación** de la issue.
-5. Comprobad que los tests pasan (en local o en la pestaña *Checks* de la PR).
-6. En la PR: aprobad, o pedid cambios explicando qué criterio no se cumple.
 
 ## Estructura del proyecto
 
