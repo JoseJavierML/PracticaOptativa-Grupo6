@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
@@ -31,12 +32,16 @@ public class BibliotecaController {
     }
 
     @GetMapping
-    public ResponseEntity<?> listar(HttpSession sesion) {
+    public ResponseEntity<?> listar(
+            @RequestParam(required = false) Long generoId,
+            @RequestParam(required = false) Integer anio,
+            @RequestParam(required = false) EstadoBiblioteca estado,
+            HttpSession sesion) {
         Long usuarioId = usuarioId(sesion);
         if (usuarioId == null) {
             return noAutorizado();
         }
-        List<BibliotecaService.ElementoBiblioteca> items = servicio.listar(usuarioId);
+        List<BibliotecaService.ElementoBiblioteca> items = servicio.buscar(usuarioId, generoId, anio, estado);
         return ResponseEntity.ok(items);
     }
 

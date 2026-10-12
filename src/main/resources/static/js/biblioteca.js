@@ -1,4 +1,5 @@
 const API_BIBLIOTECA = "/api/biblioteca";
+const API_GENEROS = "/api/generos";
 const estados = ["PENDIENTE", "VISTO", "ABANDONADO"];
 const nombresEstado = {
     PENDIENTE: "Pendiente",
@@ -87,12 +88,19 @@ function crearFila(item) {
 
 async function cargarBiblioteca() {
     try {
-        const items = await solicitar(API_BIBLIOTECA);
+        const parametros = new URLSearchParams();
+        const genero = document.getElementById("filtro-genero-biblioteca").value;
+        const anio = document.getElementById("filtro-anio-biblioteca").value;
+        const estado = document.getElementById("filtro-estado-biblioteca").value;
+        if (genero) parametros.set("generoId", genero);
+        if (anio) parametros.set("anio", anio);
+        if (estado) parametros.set("estado", estado);
+        const items = await solicitar(`${API_BIBLIOTECA}?${parametros}`);
         lista.replaceChildren();
         if (items.length === 0) {
             const vacio = document.createElement("li");
             vacio.className = "vacio";
-            vacio.textContent = "Todavía no has añadido títulos a tu biblioteca.";
+            vacio.textContent = "No se han encontrado películas ni series con los filtros seleccionados";
             lista.appendChild(vacio);
             return;
         }
@@ -105,4 +113,19 @@ async function cargarBiblioteca() {
     }
 }
 
-cargarBiblioteca();
+async function cargarGeneros() {
+    const generos = await solicitar(API_GENEROS);
+    const selector = document.getElementById("filtro-genero-biblioteca");
+    generos.forEach(genero => selector.add(new Option(genero.nombre, genero.id)));
+}
+
+document.getElementById("filtros-biblioteca").addEventListener("submit", evento => {
+    evento.preventDefault();
+    cargarBiblioteca();
+});
+document.getElementById("limpiar-filtros-biblioteca").addEventListener("click", () => {
+    document.getElementById("filtros-biblioteca").reset();
+    cargarBiblioteca();
+});
+
+Promise.all([cargarGeneros(), cargarBiblioteca()]).catch(error => mostrarMensaje(error.message, "error"));

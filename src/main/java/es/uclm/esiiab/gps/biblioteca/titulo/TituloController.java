@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import es.uclm.esiiab.gps.biblioteca.biblioteca.EstadoBiblioteca;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/titulos")
@@ -26,8 +30,17 @@ public class TituloController {
     }
 
     @GetMapping
-    public List<Titulo> listar() {
-        return servicio.listar();
+    public ResponseEntity<?> listar(
+            @RequestParam(required = false) Long generoId,
+            @RequestParam(required = false) Integer anio,
+            @RequestParam(required = false) EstadoBiblioteca estado,
+            HttpSession sesion) {
+        Long usuarioId = usuarioId(sesion);
+        if (estado != null && usuarioId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Inicia sesión para filtrar por estado."));
+        }
+        return ResponseEntity.ok(servicio.buscar(generoId, anio, estado, usuarioId));
     }
 
     @PostMapping
@@ -54,5 +67,24 @@ public class TituloController {
     @ExceptionHandler(TituloNoEncontradoException.class)
     public ResponseEntity<Map<String, String>> noEncontrado(TituloNoEncontradoException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+    }
+
+    private Long usuarioId(HttpSession sesion) {
+        if (sesion == null) {
+            return null;
+        }
+        Object valor = sesion.getAttribute("usuarioId");
+        if (valor instanceof Number numero && numero.longValue() > 0) {
+            return numero.longValue();
+        }
+        if (valor instanceof String texto) {
+            try {
+                long id = Long.parseLong(texto);
+                return id > 0 ? id : null;
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 }

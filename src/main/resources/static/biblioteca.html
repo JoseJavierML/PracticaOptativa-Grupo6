@@ -19,6 +19,27 @@
         <section class="panel" aria-labelledby="titulo-coleccion">
             <h2 id="titulo-coleccion">Títulos guardados</h2>
             <p id="mensaje-biblioteca" class="mensaje" role="status" aria-live="polite"></p>
+            <form id="filtros-biblioteca" class="formulario fila" aria-label="Filtrar mi biblioteca">
+                <div>
+                    <label for="filtro-genero-biblioteca">Género</label>
+                    <select id="filtro-genero-biblioteca"><option value="">Todos los géneros</option></select>
+                </div>
+                <div>
+                    <label for="filtro-anio-biblioteca">Año de estreno</label>
+                    <input id="filtro-anio-biblioteca" type="number" min="1" inputmode="numeric">
+                </div>
+                <div>
+                    <label for="filtro-estado-biblioteca">Estado</label>
+                    <select id="filtro-estado-biblioteca">
+                        <option value="">Cualquier estado</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="VISTO">Visto</option>
+                        <option value="ABANDONADO">Abandonado</option>
+                    </select>
+                </div>
+                <button type="submit">Buscar</button>
+                <button id="limpiar-filtros-biblioteca" type="button" class="secundario">Limpiar</button>
+            </form>
             <ul id="lista-biblioteca" class="coleccion" aria-live="polite">
                 <li class="cargando">Cargando tu colección...</li>
             </ul>

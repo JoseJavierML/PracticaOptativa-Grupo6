@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.uclm.esiiab.gps.biblioteca.genero.Genero;
 import es.uclm.esiiab.gps.biblioteca.genero.GeneroRepository;
+import es.uclm.esiiab.gps.biblioteca.biblioteca.EstadoBiblioteca;
 
 @Service
 public class TituloService {
@@ -22,6 +23,12 @@ public class TituloService {
     @Transactional(readOnly = true)
     public List<Titulo> listar() {
         return repositorio.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Titulo> buscar(Long generoId, Integer anio, EstadoBiblioteca estado, Long usuarioId) {
+        validarFiltros(generoId, anio);
+        return repositorio.buscar(generoId, anio, estado, usuarioId);
     }
 
     @Transactional
@@ -47,6 +54,15 @@ public class TituloService {
             throw new TituloNoEncontradoException(id);
         }
         repositorio.deleteById(id);
+    }
+
+    private void validarFiltros(Long generoId, Integer anio) {
+        if (generoId != null && generoId <= 0) {
+            throw new IllegalArgumentException("El género indicado no es válido.");
+        }
+        if (anio != null && anio < 1) {
+            throw new IllegalArgumentException("El año debe ser un número positivo.");
+        }
     }
 
     private DatosValidados validar(DatosTitulo datos) {

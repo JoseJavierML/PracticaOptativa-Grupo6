@@ -28,6 +28,22 @@ public class BibliotecaService {
                 .stream().map(this::convertir).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ElementoBiblioteca> buscar(Long usuarioId, Long generoId, Integer anio,
+            EstadoBiblioteca estado) {
+        if (generoId != null && generoId <= 0) {
+            throw new IllegalArgumentException("El género indicado no es válido.");
+        }
+        if (anio != null && anio < 1) {
+            throw new IllegalArgumentException("El año debe ser un número positivo.");
+        }
+        return repositorio.findByUsuarioIdOrderByFechaModificacionDesc(usuarioId).stream()
+                .filter(item -> generoId == null || item.getTitulo().getGenero().getId().equals(generoId))
+                .filter(item -> anio == null || item.getTitulo().getAnio().equals(anio))
+                .filter(item -> estado == null || item.getEstado() == estado)
+                .map(this::convertir).toList();
+    }
+
     @Transactional
     public ElementoBiblioteca anadir(Long usuarioId, NuevoBibliotecaItem peticion) {
         if (peticion == null || peticion.tituloId() == null || peticion.tituloId() <= 0
