@@ -70,6 +70,11 @@
                 <input id="duracion" type="number" min="1">
                 <label id="etiqueta-temporadas" for="temporadas" hidden>Temporadas</label>
                 <input id="temporadas" type="number" min="1" hidden>
+                <label id="etiqueta-capitulos-temporada" for="capitulos-por-temporada" hidden>
+                    Capítulos por temporada (separados por comas)
+                </label>
+                <input id="capitulos-por-temporada" type="text" inputmode="numeric"
+                       placeholder="10, 8, 12" hidden>
                 <div class="fila">
                     <button type="submit">Guardar</button>
                     <button id="cancelar-titulo" type="button" class="secundario">Cancelar</button>
@@ -78,6 +83,7 @@
             </form>
         </section>
     </main>
+    <script src="js/progreso-serie.js"></script>
     <script src="js/catalogo.js"></script>
 </body>
 </html>

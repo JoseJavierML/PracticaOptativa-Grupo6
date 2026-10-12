@@ -35,7 +35,8 @@ public class TituloService {
     public Titulo crear(DatosTitulo datos) {
         DatosValidados validados = validar(datos);
         return repositorio.save(new Titulo(validados.titulo(), validados.anio(), validados.genero(),
-                validados.tipo(), validados.duracion(), validados.temporadas()));
+            validados.tipo(), validados.duracion(), validados.temporadas(),
+            validados.capitulosPorTemporada()));
     }
 
     @Transactional
@@ -44,7 +45,7 @@ public class TituloService {
                 .orElseThrow(() -> new TituloNoEncontradoException(id));
         DatosValidados validados = validar(datos);
         titulo.actualizar(validados.titulo(), validados.anio(), validados.genero(), validados.tipo(),
-                validados.duracion(), validados.temporadas());
+            validados.duracion(), validados.temporadas(), validados.capitulosPorTemporada());
         return titulo;
     }
 
@@ -91,15 +92,23 @@ public class TituloService {
                 && (datos.temporadas() == null || datos.temporadas() < 1)) {
             throw new IllegalArgumentException("El número de temporadas debe ser positivo.");
         }
+        if (datos.tipo() == TipoTitulo.SERIE
+            && (datos.capitulosPorTemporada() == null
+            || datos.capitulosPorTemporada().size() != datos.temporadas()
+            || datos.capitulosPorTemporada().stream().anyMatch(capitulos -> capitulos == null || capitulos < 1))) {
+            throw new IllegalArgumentException(
+                "Indica un número positivo de capítulos para cada temporada.");
+        }
         return new DatosValidados(datos.titulo().strip(), datos.anio(), genero, datos.tipo(),
-                datos.duracion(), datos.temporadas());
+            datos.duracion(), datos.temporadas(), datos.tipo() == TipoTitulo.SERIE
+                ? List.copyOf(datos.capitulosPorTemporada()) : List.of());
     }
 
     public record DatosTitulo(String titulo, Integer anio, Long generoId, TipoTitulo tipo,
-                              Integer duracion, Integer temporadas) {
+                              Integer duracion, Integer temporadas, List<Integer> capitulosPorTemporada) {
     }
 
     private record DatosValidados(String titulo, Integer anio, Genero genero, TipoTitulo tipo,
-                                  Integer duracion, Integer temporadas) {
+                                  Integer duracion, Integer temporadas, List<Integer> capitulosPorTemporada) {
     }
 }

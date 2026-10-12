@@ -50,12 +50,27 @@ class TituloControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"titulo":"Dark","anio":2017,"generoId":2,
-                                 "tipo":"SERIE","temporadas":3}
+                                 "tipo":"SERIE","temporadas":3,
+                                 "capitulosPorTemporada":[10,8,12]}
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.tipo").value("SERIE"))
-                .andExpect(jsonPath("$.temporadas").value(3));
+                                .andExpect(jsonPath("$.temporadas").value(3))
+                                .andExpect(jsonPath("$.capitulos").value(30))
+                                .andExpect(jsonPath("$.capitulosPorTemporada[1]").value(8));
     }
+
+        @Test
+        void rechazaUnaSerieSinDesgloseDeCapitulosPorTemporada() throws Exception {
+                mockMvc.perform(post("/api/titulos")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content("""
+                                                                {"titulo":"Serie incompleta","anio":2020,"generoId":2,
+                                                                 "tipo":"SERIE","temporadas":2,"capitulosPorTemporada":[10]}
+                                                                """))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.error").exists());
+        }
 
     @Test
     void actualizaUnTituloExistente() throws Exception {
